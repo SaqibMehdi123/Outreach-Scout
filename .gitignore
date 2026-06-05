@@ -37,6 +37,9 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# ─── Local-only notes (build status / internal progress — keep off GitHub) ───
+PROJECT_NOTES.md
+
 # ─── Logs / temp ─────────────────────────────────────────────────────────────
 *.log
 logs/

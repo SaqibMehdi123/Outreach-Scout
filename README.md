@@ -97,21 +97,6 @@ the full list: LLM key + models, Langfuse keys, per-lead budget caps
 (`AGENT_MAX_STEPS`, `AGENT_TOKEN_BUDGET`, `AGENT_MAX_COST_USD`), and the external
 data-tool provider keys (web search, enrichment, contact finder, email verify).
 
-## Module map
-
-| Module | Status | Scope |
-|--------|--------|-------|
-| 0 Foundation | ✅ | Docker, Postgres+pgvector, Redis, LLM wrapper, Langfuse, ARQ scaffold, typed tool interface, FastAPI app |
-| 1 Auth & multi-tenancy | ✅ | Org model, JWT auth, scoped queries |
-| 2 ICP & campaign mgmt | ✅ | CRUD + launch enqueues one job per candidate |
-| 3 Tool layer | ✅ | web_search, fetch_page (sandboxed), enrich_company, find_contact |
-| 4 Research agent loop | ✅ | Bounded ReAct, caps, checkpointing, trace, golden-ICP eval |
-| 5 Discovery & scoring | ✅ | Candidate companies, fit score, domain dedupe |
-| 6 Draft generation | ✅ | Personalised message, structured + validated |
-| 7 Review UI + live progress | ✅ | Next.js app (`frontend/`): SSE live research, lead detail, review actions |
-| 8 Export & CRM | ✅ | CSV export + CRM sync behind the approval gate |
-| 9 Hardening & deploy | ✅ | Cost caps, compliance settings, backpressure, deploy |
-
 ## Deploy
 
 ```bash
@@ -126,7 +111,7 @@ Migrations are Alembic (`alembic upgrade head`): `0001` enables pgvector, the
 initial-schema revision creates all tables. Set real secrets in `backend/.env`
 (`SECRET_KEY`, `LLM_API_KEY`, …) before deploying.
 
-### Hardening (Module 9)
+### Hardening
 - **Per-lead budget caps** — `AGENT_MAX_STEPS`, `AGENT_TOKEN_BUDGET`, `AGENT_MAX_COST_USD` enforced in the agent loop; per-campaign token/cost rollup on the campaign detail.
 - **Backpressure** — per-tool Redis token-bucket rate limiting + `WORKER_MAX_JOBS` concurrency cap; scale out with more worker replicas.
 - **Compliance** — opt-out/suppression list (never targeted or drafted), data-retention window with a daily purge cron (keeps exported leads), GDPR/CAN-SPAM settings.
