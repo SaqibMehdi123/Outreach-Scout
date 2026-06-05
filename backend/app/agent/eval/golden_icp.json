@@ -1,0 +1,32 @@
+{
+  "description": "Golden ICP eval set — known companies with expected research signals. Used to measure research relevance against a fixed bar.",
+  "criteria": {
+    "industries": ["B2B SaaS", "Developer Tools", "Fintech"],
+    "sizes": ["m", "l"],
+    "geos": ["United States"],
+    "roles": ["VP Sales", "Head of Revenue", "CRO", "Director of Sales Dev"],
+    "signals": ["funded", "hiring", "launch", "exec", "tech"]
+  },
+  "cases": [
+    {
+      "seed": {"name": "Stripe", "domain": "stripe.com"},
+      "expect": {"industry_contains": "fintech|payments", "min_insights": 2,
+                 "contact_required": true}
+    },
+    {
+      "seed": {"name": "Vercel", "domain": "vercel.com"},
+      "expect": {"industry_contains": "developer|cloud|web", "min_insights": 2,
+                 "contact_required": true}
+    },
+    {
+      "seed": {"name": "Datadog", "domain": "datadoghq.com"},
+      "expect": {"industry_contains": "observability|monitoring|saas", "min_insights": 2,
+                 "contact_required": true}
+    },
+    {
+      "seed": {"name": "Notion", "domain": "notion.so"},
+      "expect": {"industry_contains": "productivity|saas", "min_insights": 2,
+                 "contact_required": true}
+    }
+  ]
+}

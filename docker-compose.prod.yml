@@ -1,0 +1,39 @@
+name: outreach-scout-prod
+
+# Production overlay: baked image (no source mounts), restart policies, multiple
+# uvicorn workers, and a separately-scalable worker pool.
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --scale worker=3
+
+services:
+  db:
+    restart: always
+
+  redis:
+    restart: always
+
+  api:
+    restart: always
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 4
+    volumes: []          # use the image, not a bind mount
+    environment:
+      ENVIRONMENT: production
+
+  worker:
+    restart: always
+    volumes: []
+    environment:
+      ENVIRONMENT: production
+    deploy:
+      replicas: 2        # scale horizontally for larger campaigns
+
+  migrate:
+    build: ./backend
+    command: alembic upgrade head
+    env_file: ./backend/.env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://outreach:outreach@db:5432/outreach_scout
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
