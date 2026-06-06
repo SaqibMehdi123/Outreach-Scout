@@ -27,10 +27,13 @@ export function GoogleButton({ onCredential }: { onCredential: (idToken: string)
       callback: (resp: { credential: string }) => onCredential(resp.credential),
     });
     window.google.accounts.id.renderButton(ref.current, {
+      type: "standard",
       theme: "outline",
       size: "large",
-      width: 320,
+      shape: "pill", // capsule — rendered natively by Google
       text: "continue_with",
+      logo_alignment: "center", // logo sits next to the text, both centered together
+      width: 320,
     });
   }, [ready, onCredential]);
 
@@ -45,10 +48,10 @@ export function GoogleButton({ onCredential }: { onCredential: (idToken: string)
   return (
     <>
       <Script src="https://accounts.google.com/gsi/client" onLoad={() => setReady(true)} />
-      {/* GIS renders a rectangular button in an iframe; a tight rounded wrapper with
-          overflow:hidden clips its corners for a softly rounded look (not a full pill). */}
+      {/* Google renders the capsule (pill) shape itself via shape:"pill", so no CSS
+          clipping is needed. inline-flex just lets the wrapper hug + center the button. */}
       <div style={{ display: "flex", justifyContent: "center", minHeight: 44 }}>
-        <div ref={ref} style={{ borderRadius: 11, overflow: "hidden", lineHeight: 0 }} />
+        <div ref={ref} style={{ display: "inline-flex" }} />
       </div>
     </>
   );
