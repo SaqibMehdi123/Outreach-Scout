@@ -20,6 +20,9 @@ class Settings(BaseSettings):
     environment: str = "development"
     secret_key: str = "change-me"
     log_level: str = "INFO"
+    # Comma-separated allowed browser origins for CORS. In prod set this to the
+    # deployed frontend URL, e.g. CORS_ORIGINS=https://your-app.vercel.app
+    cors_origins: str = "http://localhost:3000,http://localhost:5173"
 
     # ── Infra ────────────────────────────────────────────────────────────────
     database_url: str = "postgresql+asyncpg://outreach:outreach@localhost:5432/outreach_scout"
@@ -73,6 +76,10 @@ class Settings(BaseSettings):
     @property
     def is_production(self) -> bool:
         return self.environment.lower() == "production"
+
+    @property
+    def cors_origins_list(self) -> list[str]:
+        return [o.strip() for o in self.cors_origins.split(",") if o.strip()]
 
     @property
     def langfuse_enabled(self) -> bool:

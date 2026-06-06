@@ -12,12 +12,18 @@ from sqlalchemy.ext.asyncio import (
 
 from app.config import settings
 
+# Managed Postgres (Neon, Supabase, Render, …) requires TLS; localhost does not.
+# asyncpg enables TLS via connect_args ssl=True (verifies the provider's cert).
+_is_local_db = any(h in settings.database_url for h in ("localhost", "127.0.0.1"))
+_connect_args: dict = {} if _is_local_db else {"ssl": True}
+
 engine = create_async_engine(
     settings.database_url,
     echo=False,
     pool_pre_ping=True,
-    pool_size=10,
-    max_overflow=20,
+    pool_size=5,
+    max_overflow=10,
+    connect_args=_connect_args,
 )
 
 SessionLocal = async_sessionmaker(
